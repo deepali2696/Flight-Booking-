@@ -42,13 +42,10 @@ namespace Flights.Controllers
             _logger = logger;
         }
 
+       static Random random = new Random();
 
-        Random random = new Random();
-
-        [HttpGet]
-        public IEnumerable<FlightRm> Search()
-            => new FlightRm[]
-            {
+        static private FlightRm[] flights = new FlightRm[]
+        {
         new (   Guid.NewGuid(),
                 "American Airlines",
                 random.Next(90, 5000).ToString(),
@@ -97,7 +94,14 @@ namespace Flights.Controllers
                 new TimePlaceRm("Le Bourget",DateTime.Now.AddHours(random.Next(1, 58))),
                 new TimePlaceRm("Zagreb",DateTime.Now.AddHours(random.Next(4, 60))),
                     random.Next(1, 853))
-            };
+        };
 
+        [HttpGet]
+        public IEnumerable<FlightRm> Search()
+           => flights;
+
+        [HttpGet("{id}")]
+        public FlightRm Find(Guid id)
+            => flights.SingleOrDefault(f => f.Id == id);
     }
 }
